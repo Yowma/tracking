@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Transaction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #90EE90;
+            --secondary: #2A6041;
+            --dark: #1C0F13;
+            --light: #F2F0F0;
+            --lighter: #F7F0F0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--lighter);
+            color: var(--dark);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        .sidebar {
+            background-color: var(--light);
+            padding: 2rem;
+            border-right: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: block; /* Changed from flex to block */
+            margin-bottom: 2rem;
+            color: var(--secondary);
+            font-size: 1.5rem;
+        }
+
+        .logo img {
+            width: 200px; /* Adjusted for rectangular format */
+            height: auto; /* Adjusted height to maintain proportion */
+            margin-bottom: 1rem; /* Space between logo and text */
+        }
+
+        .logo-text {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .nav-item {
+            padding: 1rem;
+            margin: 0.5rem 0;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background-color: var(--primary);
+            color: var(--secondary);
+        }
+
+        .nav-item.active {
+            background-color: var(--secondary);
+            color: var(--light);
+        }
+
+        .main-content {
+            padding: 2rem;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+        }
+
+        .search-section {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 1rem;
+        }
+
+        .companies-list {
+            background-color: var(--light);
+            padding: 1rem;
+            border-radius: 8px;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 2rem;
+        }
+
+        .company-item {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background-color: white;
+            border-radius: 6px;
+            transition: transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .company-item:hover {
+            transform: translateX(10px);
+            background-color: var(--primary);
+        }
+
+        .items-section {
+            margin: 2rem 0;
+        }
+
+        .items-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-family: 'Syne', sans-serif;
+        }
+
+        .item-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .upload-section {
+            margin-top: 2rem;
+        }
+
+        .upload-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .upload-card {
+            background-color: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .upload-placeholder {
+            width: 100%;
+            height: 150px;
+            background-color: white;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #e2e2e2;
+            color: var(--dark);
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="pgsi_logo.png" alt="Powerguide Solutions Inc.">
+                Hi, Employee
+            </div>
+            <nav>
+                <div class="nav-item active">Tracking</div>
+                <div class="nav-item">Inventory</div>
+                <div class="nav-item">Add Client</div>
+                <div class="nav-item">Add Transaction</div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="breadcrumb">
+                <h1>Tracking > Add Transaction</h1>
+                <button class="btn btn-secondary" style="margin-left: auto;">Add Client</button>
+            </div>
+
+            <div class="search-section">
+                <input type="text" class="input-field" placeholder="Enter Company Name" id="companySearch">
+                <input type="date" class="input-field" style="width: auto;">
+            </div>
+
+            <div class="companies-list" id="companiesList"></div>
+
+            <div class="form-section">
+                <input type="text" class="input-field" placeholder="Add Purchase Number">
+                <input type="text" class="input-field" placeholder="Add Sales Invoice Number">
+                <input type="text" class="input-field" placeholder="Add Delivery Receipt Number">
+            </div>
+
+            <div class="items-section">
+                <div class="items-header">
+                    <h2>Item Availed</h2>
+                </div>
+                <div class="item-row">
+                    <input type="text" class="input-field" placeholder="Item 1">
+                    <input type="number" class="input-field" placeholder="Quantity" style="width: 150px;">
+                </div>
+                <button class="btn btn-secondary">Add Item</button>
+            </div>
+
+            <div class="upload-section">
+                <h2 style="font-family: 'Syne', sans-serif;">Upload Media</h2>
+                <div class="upload-grid">
+                    <div class="upload-card">
+                        <h3 style="font-family: 'Syne', sans-serif;">Sales Invoice</h3>
+                        <div class="upload-placeholder">
+                            <img src="/api/placeholder/150/150" alt="Upload placeholder">
+                        </div>
+                        <div class="button-group">
+                            <button class="btn btn-secondary">Retake</button>
+                            <button class="btn btn-primary">Upload</button>
+                        </div>
+                    </div>
+
+                    <div class="upload-card">
+                        <h3 style="font-family: 'Syne', sans-serif;">Delivery Purchase</h3>
+                        <div class="upload-placeholder">
+                            <img src="/api/placeholder/150/150" alt="Upload placeholder">
+                        </div>
+                        <div class="button-group">
+                            <button class="btn btn-secondary">Retake</button>
+                            <button class="btn btn-primary">Upload</button>
+                        </div>
+                    </div>
+
+                    <div class="upload-card">
+                        <h3 style="font-family: 'Syne', sans-serif;">Purchase Order</h3>
+                        <div class="upload-placeholder">
+                            <img src="/api/placeholder/150/150" alt="Upload placeholder">
+                        </div>
+                        <div class="button-group">
+                            <button class="btn btn-secondary">Retake</button>
+                            <button class="btn btn-primary">Upload</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary">Save</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Sample companies data
+        const companies = [
+            'A Company', 'B Company', 'C Company', 'D Company Inc.',
+            'E Company', 'F Company Inc.', 'A Company', 'B Company',
+            'C Company', 'D Company Inc.', 'E Company', 'F Company Inc.',
+            'A Company', 'B Company', 'C Company'
+        ];
+
+        // Populate companies list
+        const companiesList = document.getElementById('companiesList');
+        const companySearch = document.getElementById('companySearch');
+
+        function renderCompanies(filter = '') {
+            companiesList.innerHTML = '';
+            companies
+                .filter(company => company.toLowerCase().includes(filter.toLowerCase()))
+                .forEach(company => {
+                    const div = document.createElement('div');
+                    div.className = 'company-item';
+                    div.textContent = company;
+                    div.onclick = () => selectCompany(company);
+                    companiesList.appendChild(div);
+                });
+        }
+
+        // Initial render
+        renderCompanies();
+
+        // Search functionality
+        companySearch.addEventListener('input', (e) => {
+            renderCompanies(e.target.value);
+        });
+
+        // Company selection
+        function selectCompany(company) {
+            companySearch.value = company;
+        }
+    </script>
+</body>
+</html>

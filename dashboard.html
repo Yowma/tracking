@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Tracking System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="pgsi_logo.png" alt="Powerguide Solutions Inc.">
+            </div>
+            <div class="logo">Hi, Employee</div>
+            <nav>
+                <div class="nav-item active">Tracking</div>
+                <div class="nav-item">Inventory</div>
+                <div class="nav-item">Add Client</div>
+                <div class="nav-item">Add Transaction</div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="header">
+                <h1 style="font-family: 'Syne', sans-serif;">Tracking</h1>
+                <button class="btn btn-primary">Add Transaction</button>
+            </div>
+
+            <div class="search-section">
+                <input type="text" class="search-input" placeholder="Enter Company Name" readonly>
+                <input type="text" class="date-input" placeholder="mm/dd/yyyy" readonly>
+            </div>
+
+            <div class="input-row">
+                <input type="text" class="full-width" placeholder="Display the Address Company Address here" readonly>
+                <input type="text" class="half-width" placeholder="Display the TIN no. here" readonly>
+            </div>
+
+            <div class="input-row">
+                <input type="text" class="half-width" placeholder="Display the Contact Person here" readonly>
+                <input type="text" class="half-width" placeholder="Display the Contact Number here" readonly>
+            </div>
+
+            <div class="input-row">
+                <input type="text" class="full-width" placeholder="Display the Business Style here" readonly>
+            </div>
+
+            <div class="items-section">
+                <div class="items-header">
+                    <h3>Items Availed</h3>
+                    <h3>Quantity</h3>
+                </div>
+                <div class="items-row">
+                    <input type="text" placeholder="Display the Items Availed">
+                    <input type="text" placeholder="Display the Quantity">
+                </div>
+                <div class="items-row">
+                    <input type="text" placeholder="Display the Items Availed">
+                    <input type="text" placeholder="Display the Quantity">
+                </div>
+                <div class="items-row">
+                    <input type="text" placeholder="Display the Items Availed">
+                    <input type="text" placeholder="Display the Quantity">
+                </div>
+            </div>
+
+            <div class="companies-list" id="companiesList"></div>
+
+            <div class="documents-grid">
+                <div class="document-card">
+                    <h3 style="font-family: 'Syne', sans-serif;">Sales Invoice</h3>
+                    <div class="document-image">
+                        <img src="/api/placeholder/150/150" alt="Document">
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-secondary" onclick="viewDocument('sales')">View</button>
+                        <button class="btn btn-primary" onclick="downloadDocument('sales')">Download</button>
+                    </div>
+                </div>
+
+                <div class="document-card">
+                    <h3 style="font-family: 'Syne', sans-serif;">Delivery Purchase</h3>
+                    <div class="document-image">
+                        <img src="/api/placeholder/150/150" alt="Document">
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-secondary" onclick="viewDocument('delivery')">View</button>
+                        <button class="btn btn-primary" onclick="downloadDocument('delivery')">Download</button>
+                    </div>
+                </div>
+
+                <div class="document-card">
+                    <h3 style="font-family: 'Syne', sans-serif;">Purchase Order</h3>
+                    <div class="document-image">
+                        <img src="/api/placeholder/150/150" alt="Document">
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-secondary" onclick="viewDocument('purchase')">View</button>
+                        <button class="btn btn-primary" onclick="downloadDocument('purchase')">Download</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Sample companies data
+        const companies = [
+            "Corner Steel Systems Corporation",
+            "B Company",
+            "C Company",
+            "D Company Inc.",
+            "E Company",
+            "F Company Inc.",
+            "A Company",
+        ];
+    
+        // Populate companies list
+        const companiesList = document.getElementById("companiesList");
+        const companySearch = document.getElementById("companySearch");
+    
+        function renderCompanies(filter = "") {
+            companiesList.innerHTML = "";
+            companies
+                .filter((company) => company.toLowerCase().includes(filter.toLowerCase()))
+                .forEach((company) => {
+                    const div = document.createElement("div");
+                    div.className = "company-item";
+                    div.textContent = company;
+                    div.addEventListener("click", () => selectCompany(company));
+                    companiesList.appendChild(div);
+                });
+        }
+    
+        // Initial render
+        renderCompanies();
+    
+        // Search functionality
+        if (companySearch) {
+            companySearch.addEventListener("input", (e) => {
+                renderCompanies(e.target.value);
+            });
+        } else {
+            console.error("Element with ID 'companySearch' not found.");
+        }
+    
+        // Company selection
+        function selectCompany(company) {
+    fetch(`fetch_company.php?company_name=${encodeURIComponent(company)}`)
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.error) {
+                showNotification(data.error, "error");
+            } else {
+                // Fill company details (fields are readonly)
+                document.querySelector(".search-input").value = data.name;
+                document.querySelectorAll(".full-width")[0].value = data.address;
+                document.querySelectorAll(".half-width")[0].value = data.tin_no;
+                document.querySelectorAll(".half-width")[1].value = data.contact_person;
+                document.querySelectorAll(".half-width")[2].value = data.contact_number;
+                document.querySelectorAll(".full-width")[1].value = data.business_style;
+
+                // Show success notification
+                showNotification(`Company "${data.name}" selected successfully!`, "success");
+
+                // Display items availed and quantity
+                const itemsSection = document.querySelector(".items-section");
+                itemsSection.innerHTML = `<div class="items-header">
+                    <h3>Items Availed</h3>
+                    <h3>Quantity</h3>
+                </div>`;
+
+                if (data.items.length > 0) {
+                    data.items.forEach(item => {
+                        const itemRow = document.createElement("div");
+                        itemRow.className = "items-row";
+                        itemRow.innerHTML = `
+                            <input type="text" value="${item.item_name}" readonly>
+                            <input type="text" value="${item.quantity}" readonly>
+                        `;
+                        itemsSection.appendChild(itemRow);
+                    });
+                } else {
+                    itemsSection.innerHTML += `<p>No items availed for this company.</p>`;
+                }
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            showNotification("Failed to fetch company details!", "error");
+        });
+}
+        
+    
+        // Function to show a centered notification pop-up box
+        function showNotification(message, type = "success") {
+            // Remove existing notification if any
+            const existingNotification = document.querySelector(".notification-box");
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+
+            // Create notification
+            const notification = document.createElement("div");
+            notification.className = `notification-box ${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <p>${message}</p>
+                    <button class="close-btn">OK</button>
+                </div>
+            `;
+
+            document.body.appendChild(notification);
+
+            // Close notification when button is clicked
+            notification.querySelector(".close-btn").addEventListener("click", () => {
+                notification.remove();
+            });
+
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (notification) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
+    
+        // Document actions
+        function viewDocument(type) {
+            alert(`Viewing ${type} document`);
+        }
+    
+        function downloadDocument(type) {
+            alert(`Downloading ${type} document`);
+        }
+    
+        function addTransaction() {
+            alert("Adding new transaction");
+        }
+    });
+</script>  
+</body>
+</html>

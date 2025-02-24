@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600&family=Inter:wght@400;500&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #A8E6CF, #DCEDC1);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+            padding: 1rem;
+        }
+
+        .login-container {
+            background-color: #FFF;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 450px;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-family: 'Syne', sans-serif;
+            color: #2A6041;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            color: #2A6041;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #2A6041;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1C0F13;
+            box-shadow: 0 0 8px rgba(42, 96, 65, 0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background-color: #2A6041;
+            color: #FFF;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #1C0F13;
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #ff4444;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin: 1rem 0;
+        }
+
+        .forgot-password a {
+            color: #2A6041;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: #1C0F13;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .shake {
+            animation: shake 0.4s ease;
+        }
+
+        .logo-container {
+        text-align: center;
+        margin-bottom: 1rem;
+        }
+
+        .logo-container img {
+        max-width: 200px;
+        width: 100%;
+        height: auto;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-container">
+            <img src="pgsi_logo.png" alt="Logo">
+        </div>
+        <h1>Log In</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="employeeId">Employee ID</label>
+                <input type="text" id="employeeId" required>
+                <div class="error-message" id="idError">Please enter your Employee ID</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+                <div class="error-message" id="passwordError">Please enter your password</div>
+            </div>
+
+            <div class="forgot-password">
+                <a href="#" onclick="handleForgotPassword()">Forgot Password</a>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('loginForm');
+        const idError = document.getElementById('idError');
+        const passwordError = document.getElementById('passwordError');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const employeeId = document.getElementById('employeeId').value;
+            const password = document.getElementById('password').value;
+
+            let isValid = true;
+
+            // Reset errors
+            idError.style.display = 'none';
+            passwordError.style.display = 'none';
+
+            if (!employeeId) {
+                showError('employeeId', idError);
+                isValid = false;
+            }
+
+            if (!password) {
+                showError('password', passwordError);
+                isValid = false;
+            }
+
+            if (isValid) {
+                // Handle successful login
+                form.reset();
+                alert('Login successful!');
+            }
+        });
+
+        function showError(inputId, errorElement) {
+            const input = document.getElementById(inputId);
+            errorElement.style.display = 'block';
+            input.classList.add('shake');
+            setTimeout(() => input.classList.remove('shake'), 400);
+        }
+
+        function handleForgotPassword() {
+            alert('A password reset link will be sent to your registered email.');
+        }
+    </script>
+</body>
+</html>
