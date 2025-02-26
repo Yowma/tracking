@@ -156,6 +156,58 @@
                 } else {
                     itemsSection.innerHTML += `<p>No items availed for this company.</p>`;
                 }
+
+                // Remove existing buttons if any
+                const existingPrintBtn = document.querySelector(".print-invoice-btn");
+                if (existingPrintBtn) existingPrintBtn.remove();
+
+                // Add Print Invoice button with image preview functionality
+                const printInvoiceBtn = document.createElement("button");
+                printInvoiceBtn.textContent = "Print Invoice";
+                printInvoiceBtn.className = "btn btn-primary print-invoice-btn";
+                printInvoiceBtn.onclick = function () {
+                    // Create a modal to display the invoice image
+                    const modal = document.createElement("div");
+                    modal.className = "invoice-modal";
+                    modal.innerHTML = `
+                        <div class="modal-content">
+                            <span class="close-modal">&times;</span>
+                            <h3>Invoice Preview</h3>
+                            <div class="invoice-image-container">
+                                <img src="${data.invoice_image || 'placeholder.jpg'}" alt="Invoice Image" id="invoiceImage">
+                            </div>
+                            <button class="print-btn">Print</button>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(modal);
+
+                    // Close modal functionality
+                    modal.querySelector(".close-modal").onclick = function() {
+                        modal.remove();
+                    };
+
+                    // Print functionality
+                    modal.querySelector(".print-btn").onclick = function() {
+                        const printWindow = window.open('', '_blank');
+                        printWindow.document.write(`
+                            <html>
+                            <head><title>Print Invoice</title></head>
+                            <body>
+                                <img src="${data.invoice_image || 'placeholder.jpg'}" onload="window.print();window.close()">
+                            </body>
+                            </html>
+                        `);
+                        printWindow.document.close();
+                    };
+                    // Close modal when clicking outside
+                    window.onclick = function(event) {
+                        if (event.target == modal) {
+                            modal.remove();
+                        }
+                    };
+                };
+                document.querySelector(".main-content").appendChild(printInvoiceBtn);
             }
         })
         .catch(error => {
