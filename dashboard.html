@@ -29,7 +29,7 @@
             </div>
 
             <div class="search-section">
-                <input type="text" class="search-input" placeholder="Enter Company Name" readonly>
+                <input type="text" id ="companySearch" class="search-input" placeholder="Enter Company Name" readonly>
                 <input type="text" class="date-input" placeholder="mm/dd/yyyy" readonly>
             </div>
 
@@ -64,42 +64,10 @@
                     <input type="text" placeholder="Display the Items Availed">
                     <input type="text" placeholder="Display the Quantity">
                 </div>
+
             </div>
 
             <div class="companies-list" id="companiesList"></div>
-
-            <div class="documents-grid">
-                <div class="document-card">
-                    <h3 style="font-family: 'Syne', sans-serif;">Sales Invoice</h3>
-                    <div class="document-image">
-                        <img src="/api/placeholder/150/150" alt="Document">
-                    </div>
-                    <div class="button-group">
-                        <button class="btn btn-secondary" onclick="viewDocument('sales')">View</button>
-                        <button class="btn btn-primary" onclick="downloadDocument('sales')">Download</button>
-                    </div>
-                </div>
-
-                <div class="document-card">
-                    <h3 style="font-family: 'Syne', sans-serif;">Delivery Purchase</h3>
-                    <div class="document-image">
-                        <img src="/api/placeholder/150/150" alt="Document">
-                    </div>
-                    <div class="button-group">
-                        <button class="btn btn-secondary" onclick="viewDocument('delivery')">View</button>
-                        <button class="btn btn-primary" onclick="downloadDocument('delivery')">Download</button>
-                    </div>
-                </div>
-
-                <div class="document-card">
-                    <h3 style="font-family: 'Syne', sans-serif;">Purchase Order</h3>
-                    <div class="document-image">
-                        <img src="/api/placeholder/150/150" alt="Document">
-                    </div>
-                    <div class="button-group">
-                        <button class="btn btn-secondary" onclick="viewDocument('purchase')">View</button>
-                        <button class="btn btn-primary" onclick="downloadDocument('purchase')">Download</button>
-                    </div>
                 </div>
             </div>
         </main>
@@ -110,7 +78,7 @@
         // Sample companies data
         const companies = [
             "Corner Steel Systems Corporation",
-            "B Company",
+            "SCHWER POWER MANUFACTURING CORP.",
             "C Company",
             "D Company Inc.",
             "E Company",
@@ -150,21 +118,23 @@
         // Company selection
         function selectCompany(company) {
     fetch(`fetch_company.php?company_name=${encodeURIComponent(company)}`)
-        .then((response) => response.json())
-        .then((data) => {
+        .then(response => response.json())
+        .then(data => {
             if (data.error) {
                 showNotification(data.error, "error");
             } else {
-                // Fill company details (fields are readonly)
-                document.querySelector(".search-input").value = data.name;
-                document.querySelectorAll(".full-width")[0].value = data.address;
-                document.querySelectorAll(".half-width")[0].value = data.tin_no;
-                document.querySelectorAll(".half-width")[1].value = data.contact_person;
-                document.querySelectorAll(".half-width")[2].value = data.contact_number;
-                document.querySelectorAll(".full-width")[1].value = data.business_style;
+                // Fill company details
+                document.querySelector(".search-input").value = data.company_name || "";
+                document.querySelectorAll(".full-width")[0].value = data.address || "";
+                document.querySelectorAll(".half-width")[0].value = data.tin_no || "";
+                document.querySelectorAll(".half-width")[1].value = data.contact_person || "";
+                document.querySelectorAll(".half-width")[2].value = data.contact_number || "";
+                document.querySelectorAll(".full-width")[1].value = data.business_style || "";
 
-                // Show success notification
-                showNotification(`Company "${data.name}" selected successfully!`, "success");
+                showNotification(`Company "${data.company_name}" selected successfully!`, "success");
+
+                // Hide the company list
+                companiesList.innerHTML = "";
 
                 // Display items availed and quantity
                 const itemsSection = document.querySelector(".items-section");
@@ -188,7 +158,7 @@
                 }
             }
         })
-        .catch((error) => {
+        .catch(error => {
             console.error("Error:", error);
             showNotification("Failed to fetch company details!", "error");
         });
@@ -241,6 +211,9 @@
             alert("Adding new transaction");
         }
     });
+    function viewInvoice(invoiceId) {
+    window.open(`view_invoice.php?invoice_id=${invoiceId}`, '_blank');
+}
 </script>  
 </body>
 </html>
