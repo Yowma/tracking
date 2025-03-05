@@ -10,6 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (!empty($employee_id) && !empty($password)) {
         $query = "SELECT id, first_name, password FROM employees WHERE employee_id = ?";
+
         $stmt = $conn->prepare($query);
         
         if ($stmt) {
