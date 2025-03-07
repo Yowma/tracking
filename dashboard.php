@@ -4,7 +4,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
-$first_name = $_SESSION['user_name'] ?? 'Employee'; // Fallback value
+$first_name = $_SESSION['user_name'] ?? 'Employee';
 ?>
 
 <!DOCTYPE html>
@@ -40,6 +40,7 @@ $first_name = $_SESSION['user_name'] ?? 'Employee'; // Fallback value
 
             <div class="search-section">
                 <input type="text" id="companySearch" class="search-input" placeholder="Enter Company Name">
+                <input type="month" id="invoiceDate" class="date-input" placeholder="Select Month and Year">
                 <input type="text" class="date-input" placeholder="mm/dd/yyyy" readonly>
             </div>
 
@@ -61,14 +62,6 @@ $first_name = $_SESSION['user_name'] ?? 'Employee'; // Fallback value
                 <div class="items-header">
                     <h3>Items Availed</h3>
                     <h3>Quantity</h3>
-                </div>
-                <div class="items-row">
-                    <input type="text" placeholder="Display the Items Availed">
-                    <input type="text" placeholder="Display the Quantity">
-                </div>
-                <div class="items-row">
-                    <input type="text" placeholder="Display the Items Availed">
-                    <input type="text" placeholder="Display the Quantity">
                 </div>
                 <div class="items-row">
                     <input type="text" placeholder="Display the Items Availed">
